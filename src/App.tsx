@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import type { User } from 'firebase/auth';
 import './App.css';
 import { BrowserRouter as Router, Navigate, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Home from './components/Home.tsx';
-import Cart from './components/Cart.tsx';
-import AuthForm from './components/AuthForm';
-import Profile from './components/Profile';
-import Orders from './components/Orders';
-import OrderDetail from './components/OrderDetail';
 import { logoutUser, subscribeToAuthChanges } from './services/authService';
 import { setCartItems } from './store/cartSlice';
 import { useAppDispatch, useAppSelector } from './store/hooks';
+
+const Home = lazy(() => import('./components/Home.tsx'));
+const Cart = lazy(() => import('./components/Cart.tsx'));
+const AuthForm = lazy(() => import('./components/AuthForm'));
+const Profile = lazy(() => import('./components/Profile'));
+const Orders = lazy(() => import('./components/Orders'));
+const OrderDetail = lazy(() => import('./components/OrderDetail'));
 
 function getUserCartSessionKey(userId: string): string {
   return `cart_items_${userId}`;
@@ -28,6 +29,16 @@ function loadUserCartFromSession(userId: string) {
   } catch {
     return [];
   }
+}
+
+function RouteFallback() {
+  return (
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading page...</span>
+      </div>
+    </div>
+  );
 }
 
 const App: React.FC = () => {
@@ -87,13 +98,15 @@ const App: React.FC = () => {
   return (
     <Router>
       <Header isAuthenticated={!!user} userEmail={user?.email ?? null} onLogout={handleLogout} />
-      <Routes>
-        <Route path="/" element={user ? <Home /> : <AuthForm />} />
-        <Route path="/cart" element={user ? <Cart user={user} /> : <AuthForm />} />
-        <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/" replace />} />
-        <Route path="/orders" element={user ? <Orders user={user} /> : <Navigate to="/" replace />} />
-        <Route path="/orders/:orderId" element={user ? <OrderDetail user={user} /> : <Navigate to="/" replace />} />
-      </Routes>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/" element={user ? <Home /> : <AuthForm />} />
+          <Route path="/cart" element={user ? <Cart user={user} /> : <AuthForm />} />
+          <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/" replace />} />
+          <Route path="/orders" element={user ? <Orders user={user} /> : <Navigate to="/" replace />} />
+          <Route path="/orders/:orderId" element={user ? <OrderDetail user={user} /> : <Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 };
