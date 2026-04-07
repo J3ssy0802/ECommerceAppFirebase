@@ -11,6 +11,7 @@ jest.mock('../services/orderService', () => ({
 
 const mockCreateOrder = createOrder as jest.Mock;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockUser = { uid: 'test-uid', email: 'user@test.com' } as any;
 
 const sampleItems: CartItem[] = [
