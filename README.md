@@ -1,3 +1,4 @@
+# Live ECommerce App Link: https://e-commerce-app-firebase-gnox6nsyw-j3ssy0802s-projects.vercel.app/
 # ECommerce App
 
 A React + TypeScript ecommerce application backed by Firebase. It uses Firestore as the database for products, users, and orders, Firebase Authentication for identity management, React Query for data fetching and cache invalidation, and Redux Toolkit for cart state management.
@@ -29,16 +30,29 @@ A React + TypeScript ecommerce application backed by Firebase. It uses Firestore
 - **Order history** page lists previous orders with cart ID, date, total items, and total price
 - **Order detail** page shows the full product breakdown for a selected order
 
+### User Interface
+- Responsive design with Bootstrap 5 for mobile, tablet, and desktop
+- Real-time cart item counter badge in the navigation header
+- Sticky navigation bar for easy access across all pages
+- Lazy-loaded routes for optimized performance and faster initial load
+
+### Real-time Data Management
+- Live product data synchronization with Firestore using React Query
+- Automatic cache invalidation when products, orders, or user data changes
+- Session-scoped cart persistence per user account
+
 ## Tech Stack
 
-- React 19
-- TypeScript
-- Vite 8
-- Firebase 12 (Authentication + Firestore)
-- React Router 7
-- React Query (@tanstack/react-query)
-- Redux Toolkit + React Redux
-- Bootstrap 5
+- React 19.2.4
+- TypeScript 5.9.3
+- Vite 8.0.0
+- Firebase 12.11.0 (Authentication + Firestore)
+- React Router 7.13.1
+- React Query (@tanstack/react-query) 5.91.0
+- Redux Toolkit 2.11.2
+- React Redux 9.2.0
+- Bootstrap 5.3.8
+- Jest 30.3.0 (Testing)
 
 ## Project Structure
 
@@ -107,6 +121,46 @@ npm run preview
 ```bash
 npm run lint
 ```
+
+### 7. Run tests
+
+```bash
+npm test
+```
+
+## Testing
+
+This project uses **Jest** with **React Testing Library** for component and integration testing.
+
+### Test Files
+
+- **AuthForm.test.tsx** — Tests for login/register form behavior, including mode switching, form submission, and error handling
+- **Cart.test.tsx** — Unit tests for cart component functionality
+- **CartIntegration.test.tsx** — Integration tests for cart workflows with multiple components
+
+### Running Tests
+
+```bash
+# Run all tests in watch mode
+npm test
+
+# Run tests once (CI mode)
+npm test -- --passWithNoTests
+```
+
+### Test Coverage
+
+Tests focus on:
+- **Component rendering** — Ensuring UI elements display correctly
+- **User interactions** — Form submissions, button clicks, mode switching
+- **Service integration** — Mocking Firebase auth services and verifying correct API calls
+- **Error handling** — Testing error states and user feedback
+
+### Best Practices
+
+- Mocked Firebase services prevent external API calls during testing
+- `fireEvent` and `waitFor` ensure reliable async behavior testing
+- Tests run in jsdom environment for DOM API compatibility
 
 ## Application Flow
 
